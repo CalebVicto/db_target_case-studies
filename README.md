@@ -1,37 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+	<h1>Case Studies Gallery (Next.js + RSC)</h1>
+	<p>Listado de estudios de caso renderizado con React Server Components y filtrado client-side.</p>
+</div>
 
-## Getting Started
+## ✨ Características
 
-First, run the development server:
+- Next.js (App Router) con React Server Components (RSC)
+- Datos mock en `app/api/case-studies.json`
+- Fetch de datos en el servidor (sin fetch en el cliente para la lista inicial)
+- Búsqueda en vivo (Client Component) filtrando por título
+- Grid responsivo con Tailwind CSS
+- Optimización de imágenes remotas (`next/image` + dominio permitido `picsum.photos`)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📂 Estructura relevante
+
+```
+app/
+	page.tsx                 # Home con botón de acceso
+	case-studies/page.tsx    # Página server (RSC) que carga los datos
+	api/case-studies.json    # Fuente mock de datos
+	components/
+		SearchBar.tsx          # Componente cliente para filtrar
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧠 Cómo funciona (RSC + Cliente)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. `case-studies/page.tsx` (Server Component) lee el JSON usando `fs` (solo disponible en servidor).
+2. Renderiza el HTML inicial con todos los estudios de caso.
+3. `SearchBar.tsx` es un Client Component que recibe el array y aplica filtrado en el navegador sin refetch.
+4. No se envía JS innecesario del server al cliente (solo lo del componente con interactividad).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Inicio rápido
 
-## Learn More
+Instalar dependencias:
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Entorno de desarrollo:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Abrir: http://localhost:3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Entrar a la galería: botón “Ver estudios de caso” o ir a `/case-studies` directamente.
 
-## Deploy on Vercel
+## 🔍 Búsqueda
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+La búsqueda es case-insensitive sobre el campo `title`.
+Se ejecuta en el cliente (no hay round-trip al servidor).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# db_target_case-studies
+## 🖼 Imágenes
+
+Se usan URLs de `https://picsum.photos` agregando el dominio en `next.config.ts`:
+```ts
+images: { domains: ["picsum.photos"] }
+```
